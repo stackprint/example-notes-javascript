@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stackprint Example</title>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.2/auth0-spa-js.production.js"></script>
+  </head>
+  <body>
+    <button id="login">Login</button>
+    <button id="logout">Logout</button>
+
+    <div id="notes" style="visibility: hidden;">
+      <div id="note-list"></div>
+      <div id="create-note">
+        <input id="note" /><button id="submit-note">Submit</button>
+      </div>
+    </div>
+
+    <script>
+      (async () => {
+        const projectBaseUrl =
+          "<stackprint project base url, e.g. https://p.stackprint.io/stackprint-notes>";
+        const auth0 = await createAuth0Client({
+          domain: "<auth0 account url, e.g. stackprint-examples.eu.auth0.com>",
+          client_id: "<auth0 application client id>",
+          redirect_uri: "http://localhost:3000",
+          audience: projectBaseUrl
+        });
+
+        // handle click on login
+        document.getElementById("login").addEventListener("click", async () => {
+          await auth0.loginWithRedirect();
+        });
+
+        // handle click on logout
+        document.getElementById("logout").addEventListener("click", () => {
+          auth0.logout();
+        });
+
+        // handle login callback
+        try {
+          await auth0.handleRedirectCallback();
+        } catch (err) {
+          /* not coming from redirect */
+        }
+
+        // get user access token, load notes on success
+        const accessToken = await auth0.getTokenSilently();
+        document.getElementById("notes").style.visibility = "visible";
+        const loadNotes = async () => {
+          document.getElementById("note-list").innerHTML = "";
+          const result = await fetch(`${projectBaseUrl}/notes`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
+          const notes = await result.json();
+
+          notes.forEach(note => {
+            const noteElem = document.createElement("p");
+            noteElem.innerHTML = note.text;
+            document.getElementById("note-list").appendChild(noteElem);
+          });
+        };
+        await loadNotes();
+
+        // create note
+        document
+          .getElementById("submit-note")
+          .addEventListener("click", async () => {
+            await fetch(`${projectBaseUrl}/notes`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              },
+              body: JSON.stringify({
+                text: document.getElementById("note").value
+              })
+            });
+            loadNotes();
+          });
+      })();
+    </script>
+  </body>
+</html>
