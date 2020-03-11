@@ -1,5 +1,7 @@
 # Stackprint HTML & JavaScript Example
 
+Full tutorial can be found here: https://stackprint.io/post/build-a-web-app-in-15-minutes-with-stackprint-auth0
+
 ## Setup
 
 Adapt the `projectBaseUrl` configuration variable and the `auth0` client configuration parameters.
