@@ -1,6 +1,6 @@
 # Stackprint HTML & JavaScript Example
 
-Full tutorial can be found here: https://stackprint.io/post/build-a-web-app-in-15-minutes-with-stackprint-auth0
+Full tutorial on how to build a web app in 15 minutes can be found here: https://stackprint.io/post/how-to-build-a-web-app-in-15-minutes
 
 ## Setup
 
