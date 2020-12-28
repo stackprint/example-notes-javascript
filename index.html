@@ -17,13 +17,13 @@
 
     <script>
       (async () => {
-        const projectBaseUrl =
-          "<stackprint project base url, e.g. https://p.stackprint.io/stackprint-notes>";
+        const apiBaseUrl =
+          "<stackprint api base url, e.g. https://apis.stackprint.io/stackprint-notes>";
         const auth0 = await createAuth0Client({
           domain: "<auth0 account url, e.g. stackprint-examples.eu.auth0.com>",
           client_id: "<auth0 application client id>",
           redirect_uri: "http://localhost:3000",
-          audience: projectBaseUrl
+          audience: apiBaseUrl
         });
 
         // handle click on login
@@ -48,7 +48,7 @@
         document.getElementById("notes").style.visibility = "visible";
         const loadNotes = async () => {
           document.getElementById("note-list").innerHTML = "";
-          const result = await fetch(`${projectBaseUrl}/notes`, {
+          const result = await fetch(`${apiBaseUrl}/notes`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${accessToken}`
@@ -68,7 +68,7 @@
         document
           .getElementById("submit-note")
           .addEventListener("click", async () => {
-            await fetch(`${projectBaseUrl}/notes`, {
+            await fetch(`${apiBaseUrl}/notes`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${accessToken}`
